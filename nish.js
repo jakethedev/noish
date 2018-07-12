@@ -15,7 +15,6 @@ const minimist = require('minimist')
 //Stdlib
 const util = require('util')
 const exec = util.promisify(require('child_process').exec)
-const github = "https://api.github.com/repos"
 
 async function remotes(args) {
   const { stdout, stderr } = await exec('git remote -v | head -n 1')
@@ -24,24 +23,22 @@ async function remotes(args) {
     exit(1)
   }
   let fetchRemote = stdout.split(/\s+/)[1]
-  let repoName = fetchRemote.split('/').slice(-2).join('/')
+  let repoName = fetchRemote.split(/[\/:]/).slice(-2).join('/')
   console.log(`Issues for ${repoName}`)
-  let fullUrl = `${github}/jakethedev/tavernbot/issues`
-  console.log(`Looking for issues at ${fullUrl}`)
-  httphelper.retrieve(fullUrl, (res)=>{
-    console.log(`Data got: ${res}`)
-  }, (err) => {
+  httphelper.retrieve(repoName, 'jakethedev/nish').then((data) => {
+    console.log(`Data got: \n${JSON.stringify(data)}`)
+  }).catch((err) => {
     console.log(err)
   })
 }
 
 function main() {
   let args = minimist(process.argv.slice(2), {
-      alias: {
-          h: 'help',
-          v: 'version',
-          d: 'directory'
-      }
+    alias: {
+      h: 'help',
+      v: 'version',
+      d: 'directory'
+    }
   })
   if (args.help) {
     console.log('Have a help')

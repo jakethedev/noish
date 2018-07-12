@@ -4,7 +4,7 @@
   "description": "Nodejs Github Issue Viewer",
   "main": "nish.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node nish.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/jakethedev/nish#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "minimist": "^1.2.0"
   }
 }

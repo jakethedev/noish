@@ -1,38 +1,24 @@
-const https = require('https')
+const axios = require('axios')
 
-//Swiped from node docs: https://nodejs.org/api/http.html#http_http_get_options_callback
-exports.retrieve = function(url) {
-  return new Promise ((resolve, reject) => {
-    https.get(url, (res) => {
-      const { statusCode } = res;
-      const contentType = res.headers['content-type'];
-
-      let error;
-      if (statusCode !== 200) {
-        error = `Request Failed.\nStatus Code: ${statusCode}`;
-        //TODO IF 403, repo DNE
-      } else if (!/^application\/json/.test(contentType)) {
-        error = `Invalid content-type.\nExpected application/json but received ${contentType}`
-      }
-
-      if (error) {
-        // consume response data to free up memory
-        res.resume();
-        reject(error);
-      }
-
-      let rawData = ''
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => { rawData += chunk; });
-      res.on('end', () => {
-        try {
-          resolve(rawData);
-        } catch (e) {
-          console.error(e.message);
-        }
+//Promise wrapper cleans up usage
+exports.retrieve = function(repoName, uagent) {
+  return new Promise((resolve, reject) => {
+    repoName = 'jakethedev/tavernbot'
+    console.log(`Getting issues at ${repoName}`)
+    axios({
+        method: 'get',
+        baseURL: `https://api.github.com/repos/${repoName}/issues`,
+        timeout: 10000,
+        headers: { 'User-Agent': uagent },
+        maxContentLength: 256000
+      })
+      .then(response => {
+        // console.log('Status: ' + response.status)
+        // console.log('Data: ' + JSON.stringify(inspect(response.data)));
+        resolve(response.data)
+      })
+      .catch(error => {
+        reject(error)
       });
-    }).on('error', (e) => {
-      reject(`Got error: ${e.message}`);
-    });
   })
 }
