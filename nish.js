@@ -12,9 +12,8 @@ it handles the magic from there
 const httphelper = require('./http-helper')
 //Externals
 const minimist = require('minimist')
-//Stdlib
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
+//Stdlib: trick to promisifying exec
+const exec = require('util').promisify(require('child_process').exec)
 
 async function remotes(args) {
   const { stdout, stderr } = await exec('git remote -v | head -n 1')
