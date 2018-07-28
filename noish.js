@@ -12,12 +12,12 @@ it handles the magic from there
 const httphelper = require('./http-helper')
 //Externals
 const minimist = require('minimist')
-//Stdlib: trick to promisifying exec
+//Stdlib
 const { execSync } = require('child_process')
 const { inspect } = require('util')
 
 //Grab local remote info using system git, tries to provide clear output on failure events
-function getLocalRepoName(){
+function getLocalRepoName() {
   let remoteOutput = undefined
   try {
     remoteOutput = execSync('git remote -v | head -n 1').toString()
@@ -32,7 +32,7 @@ function getLocalRepoName(){
 
 //Sets local cache-per-repo with updated github data
 function updateLocalCache(repoName, cacheFilePath) {
-  if (repoName){
+  if (repoName) {
     console.log(`Updating noish cache for ${repoName}...`)
     httphelper.retrieve(repoName, 'noish-cli').then((data) => {
       // console.log(`Data got: \n${JSON.stringify(data)}`)
@@ -57,6 +57,8 @@ let args = minimist(process.argv.slice(2), {
     h: 'help',
     v: 'version',
     f: 'savefile',
+    i: 'id',
+    l: 'list',
     r: 'repo',
     s: 'search',
     u: 'update'
@@ -73,6 +75,12 @@ if (args.help) {
   const repoName = args.repo ? args.repo : getLocalRepoName()
   if (args.update) {
     updateLocalCache(repoName, cacheFilePath)
+  } else if (args.id) {
+    console.log(`Printing issue #${args.id} within (${cacheFilePath})`)
+    //TODO Open cache and lookie
+  } else if (args.list) {
+    console.log(`Listing issues within (${cacheFilePath})`)
+    //TODO Open cache and lookie
   } else if (args.search) {
     console.log(`Searching locally (${cacheFilePath}) for issues matching '${args.search}' in ${repoName}`)
     //TODO Open cache and lookie
