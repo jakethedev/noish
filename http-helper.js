@@ -3,7 +3,6 @@ const axios = require('axios')
 //Promise wrapper cleans up usage
 exports.retrieve = function(repoName, uagent) {
   return new Promise((resolve, reject) => {
-    console.log(`Request issues from github for ${repoName}`)
     axios({
         method: 'get',
         baseURL: `https://api.github.com/repos/${repoName}/issues`,
@@ -13,7 +12,6 @@ exports.retrieve = function(repoName, uagent) {
       })
       .then(response => {
         // console.log('Status: ' + response.status)
-        // console.log('Data: ' + JSON.stringify(inspect(response.data)));
         resolve(response.data)
       })
       .catch(error => {

@@ -8,81 +8,158 @@ have to call noish from inside a git repo, and
 it handles the magic from there
 */
 
-//Util
+//Custom libs
 const httphelper = require('./http-helper')
+const filehelper = require('./file-helper')
+const { die, issueSummaryText, issueFullText } = require('./util')
 //Externals
 const minimist = require('minimist')
 //Stdlib
 const { execSync } = require('child_process')
 const { inspect } = require('util')
+// For help command
+const helptext = `Welcome to Noish v${process.env.npm_package_version}
 
-//Grab local remote info using system git, tries to provide clear output on failure events
+Noish runs on the repo containing the current directory:
+> \`noish command [option]\`.
+
+You can override the repo for all repo-based commands with -r:
+> \`noish -r username/reponame command [option]\`
+
+Below is a list of commands Noish recognizes, both forms work the same:
+  -h = --help, -f = --savefile, -i = --id, -l = --list, -r = --repo,
+  -s = --search, and -u = --update
+
+-h: Prints version and usage info then dies
+-f $filepath: Force read or write from $filepath instead of ~/.noish/$repo.json
+-i $id: Print detailed information about an issue with issue number $id for $repo
+-l: List id, title, and status of $repo's cached issues
+-r $override: Set $repo to a $override, must be in the form of 'username/reponame'
+-s: Caseless search of local $repo cache by issue title and description
+-u: Updates cache for $repo, there is no merge, it's a complete overwrite
+
+Bug reports and feature requests go here: https://github.com/jakethedev/noish
+
+Cheers :)
+`
+
+// Grab local remote info using system git when a reponame isn't provided
 function getLocalRepoName() {
   let remoteOutput = undefined
   try {
     remoteOutput = execSync('git remote -v | head -n 1').toString()
+    if (!remoteOutput.includes('github')){
+       throw new Error('Only public Github repos are currently supported')
+    }
     let remoteUrl = remoteOutput.split(/\s+/)[1]
     let repoName = remoteUrl.split(/[\/:]/).slice(-2).join('/').toLowerCase()
     return repoName
   } catch (err) {
-    console.log(`Error parsing git remote [${remoteOutput}], message: '${err.message}' - please file an issue at jakethedev/noish`)
-    process.exit(1)
+    die(`Error parsing git remote [${remoteOutput}], message: '${err.message}' - please file an issue at jakethedev/noish`)
   }
 }
 
-//Sets local cache-per-repo with updated github data
-function updateLocalCache(repoName, cacheFilePath) {
+// Returns data from github
+async function updateLocalCache(repoName) {
   if (repoName) {
     console.log(`Updating noish cache for ${repoName}...`)
-    httphelper.retrieve(repoName, 'noish-cli').then((data) => {
-      // console.log(`Data got: \n${JSON.stringify(data)}`)
-      //TODO Write to file here.
-      console.log('Data is got. TODO: Write to a repo-specific cache file')
+    return httphelper.retrieve(repoName, 'noish-cli').then((data) => {
+      return data
     }).catch((err) => {
-      console.log(err.message + ` (either ${repoName} isn't on github or you don't have permission)`)
-      process.exit(1)
-      //TODO Simplify error output and exit process
+      die(`ERR: Either ${repoName} isn't on github or you don't have permission!\n${err}`)
     })
   } else {
-    console.log(`Find the source, luke (this is not a git repo)`)
+    die(`Use the source, Luke (Err: this is not a public github repo)`)
+  }
+}
+
+// Output full issue information
+function printFullIssueById(issueId, issueCache){
+  const issueById = issueCache.find((item) => item.number == issueId)
+  if (issueById){
+    console.log(issueFullText(issueById))
+  } else {
+    die(`Issue ${issueId} not found locally - might be the cache, or it might not exist`)
+  }
+}
+
+// Search across titles and descriptions in the cache, case insensitive
+function printSearchResultsOnCacheForInput(issueCache, searchInput = 'Egg') {
+  let titleMatchOutput = [], descMatchOutput = [], cleanInput = searchInput.trim().toLowerCase()
+  // Single pass to catch em all
+  for (issue of issueCache) {
+    let lowerTitle = issue.title.toLowerCase(), lowerDesc = issue.body.toLowerCase()
+    if (lowerTitle.includes(cleanInput)){
+      titleMatchOutput.push(issueSummaryText(issue))
+    }
+    if (lowerDesc.includes(cleanInput)){
+      descMatchOutput.push(issueSummaryText(issue))
+    }
+  }
+  // Print what we've got, if anything
+  if (titleMatchOutput.length + descMatchOutput.length == 0) {
+    console.log(`We got nothin', no issues found for that search input`)
+  } else {
+    console.log(`Results for '${searchInput}', use noish -i ID for more info:\n`)
+    if (titleMatchOutput.length) {
+      console.log(`TITLE MATCHES`)
+      titleMatchOutput.map((data) => console.log(data))
+      console.log()
+    }
+    if (descMatchOutput.length) {
+      console.log(`DESCRIPTION MATCHES`)
+      descMatchOutput.map((data) => console.log(data))
+      console.log()
+    }
   }
 }
 
 ///////////////////
-//  noish.main()
+//  Send it
 ///////////////////
+async function main(){
+  let args = minimist(process.argv.slice(2), {
+    alias: {
+      h: 'help',
+      f: 'savefile',
+      i: 'id',
+      l: 'list',
+      r: 'repo',
+      s: 'search',
+      u: 'update'
+    }
+  })
 
-let args = minimist(process.argv.slice(2), {
-  alias: {
-    h: 'help',
-    v: 'version',
-    f: 'savefile',
-    i: 'id',
-    l: 'list',
-    r: 'repo',
-    s: 'search',
-    u: 'update'
+  //Killer output brah
+  if (args.help) {
+    die(helptext)
   }
-})
 
-//Simple output commands first
-if (args.help) {
-  console.log('Have a help')
-} else if (args.version) {
-  console.log('Noish v1.0!')
-} else {
-  const cacheFilePath = args.savefile ? args.savefile : './cache.json'
   const repoName = args.repo ? args.repo : getLocalRepoName()
   if (args.update) {
-    updateLocalCache(repoName, cacheFilePath)
-  } else if (args.id) {
-    console.log(`Printing issue #${args.id} within (${cacheFilePath})`)
-    //TODO Open cache and lookie
-  } else if (args.list) {
-    console.log(`Listing issues within (${cacheFilePath})`)
-    //TODO Open cache and lookie
-  } else if (args.search) {
-    console.log(`Searching locally (${cacheFilePath}) for issues matching '${args.search}' in ${repoName}`)
-    //TODO Open cache and lookie
+    // Smash and grab and cache
+    let issueData = await updateLocalCache(repoName)
+    console.log(`We found ${issueData.length} item(s) on github! Caching now...`)
+    filehelper.writeCacheForRepo(issueData, repoName)
+  } else {
+    // Everything else relies on the issue cache, this else cleans things up
+    const issueCache = filehelper.readCacheForRepo(repoName).sort((a,b) => a.number >= b.number)
+    if (issueCache.length < 1) {
+      die(`No local issues found for ${repoName}, make sure the repo is a public Github repo then try 'noish -u'`)
+    }
+    if (args.id) {
+      printFullIssueById(args.id, issueCache)
+    } else if (args.list) {
+      for (issue of issueCache){
+        console.log(issueSummaryText(issue))
+      }
+    } else if (args.search.length > 0) {
+      printSearchResultsOnCacheForInput(issueCache, args.search)
+    } else {
+      console.log(`Command not recognized or your search was empty, noish -h for more info`)
+    }
   }
 }
+
+// Lets us await like fancy people
+main()

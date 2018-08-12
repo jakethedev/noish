@@ -1,7 +1,7 @@
 {
   "name": "noish",
-  "version": "0.1.0",
-  "description": "Nodejs Github Issue Viewer",
+  "version": "1.0.0",
+  "description": "The Github Issue Viewer for Open Source Projects",
   "main": "noish.js",
   "scripts": {
     "test": "node noish.js",
