@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-//Promise wrapper cleans up usage
+//Promise wrapper cleans up usage. per_page: https://developer.github.com/v3/#pagination
 exports.retrieve = function(repoName, uagent, maxCount) {
   return new Promise((resolve, reject) => {
     axios({
