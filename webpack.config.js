@@ -5,7 +5,7 @@ module.exports = {
   target: 'node',
   mode: 'production',
   output: {
-    path: path.join(__dirname, 'build'),
+    path: path.join(__dirname, 'bin'),
     filename: 'noish.js'
   }
 }

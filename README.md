@@ -8,15 +8,15 @@ Noish works best globally installed. Make sure you have node 8+, then give it a 
 
 Noish runs on the repo containing the current directory: `noish command [option]`. You can override the repo Noish looks at for all repo-based commands with -r: `noish -r username/reponame command [option]`
 
-Below is a list of commands Noish recognizes. Each is in shorthand but can be spelled out: -h = --help, -f = --savefile, -i = --id, -l = --list, -r = --repo, -s = --search, and -u = --update
+Below is a list of commands Noish recognizes. Each is in shorthand but can be spelled out: *-h/--help, -c/--issueCount, -f/--savefile, -i/--id, -l/--list, -r/--repo, -s/--search, and -u/--update*
 
-- -h: Prints version and usage info then dies
+- -h: Prints version and usage info
 - -f $filepath: Force read or write from $filepath instead of ~/.noish/$repo.json
 - -i $id: Print detailed information about an issue with issue number $id for $repo
 - -l: List id, title, and status of $repo's cached issues
 - -r $override: Set $repo to a $override, must be in the form of 'username/reponame'
 - -s: Caseless search of local $repo cache by issue title and description
-- -u: Updates cache for $repo, there is no merge, it's a complete overwrite
+- -u: Updates cache for $repo. Currently there is no merge, it rewrites the local cache. Defaults to 50 most recent open issues
 
 ## Development
 
