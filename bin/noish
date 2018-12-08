@@ -82,7 +82,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 52);
+/******/ 	return __webpack_require__(__webpack_require__.s = 53);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -92,8 +92,8 @@
 "use strict";
 
 
-var bind = __webpack_require__(15);
-var isBuffer = __webpack_require__(48);
+var bind = __webpack_require__(14);
+var isBuffer = __webpack_require__(44);
 
 /*global toString:true*/
 
@@ -402,7 +402,7 @@ module.exports = {
 "use strict";
 
 
-var enhanceError = __webpack_require__(13);
+var enhanceError = __webpack_require__(12);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -428,7 +428,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(46);
+var normalizeHeaderName = __webpack_require__(42);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -444,10 +444,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(45);
+    adapter = __webpack_require__(41);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(40);
+    adapter = __webpack_require__(36);
   }
   return adapter;
 }
@@ -525,6 +525,17 @@ module.exports = defaults;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+// Simple utils to store off duped code
+exports.die = function(msg, exitCode = 1){
+  console.log(msg)
+  process.exit(exitCode)
+}
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -550,7 +561,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -562,19 +573,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports) {
-
-module.exports = require("os");
-
-/***/ }),
 /* 6 */
-/***/ (function(module, exports) {
-
-module.exports = require("util");
-
-/***/ }),
-/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -590,7 +589,7 @@ exports.coerce = coerce;
 exports.disable = disable;
 exports.enable = enable;
 exports.enabled = enabled;
-exports.humanize = __webpack_require__(35);
+exports.humanize = __webpack_require__(31);
 
 /**
  * Active `debug` instances.
@@ -805,21 +804,21 @@ function coerce(val) {
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = require("url");
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var url = __webpack_require__(8);
-var http = __webpack_require__(11);
-var https = __webpack_require__(10);
-var assert = __webpack_require__(39);
-var Writable = __webpack_require__(38).Writable;
-var debug = __webpack_require__(37)("follow-redirects");
+var url = __webpack_require__(7);
+var http = __webpack_require__(10);
+var https = __webpack_require__(9);
+var assert = __webpack_require__(35);
+var Writable = __webpack_require__(34).Writable;
+var debug = __webpack_require__(33)("follow-redirects");
 
 // RFC7231§4.2.1: Of the request methods defined by this specification,
 // the GET, HEAD, OPTIONS, and TRACE methods are defined to be safe.
@@ -1101,19 +1100,19 @@ module.exports.wrap = wrap;
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("https");
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = require("http");
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1186,7 +1185,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1214,7 +1213,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1247,7 +1246,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1265,13 +1264,13 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports) {
 
-module.exports = require("child_process");
+module.exports = require("os");
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = function (args, opts) {
@@ -1513,82 +1512,7 @@ function isNumber (x) {
 
 
 /***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
-// Simple utils to store off duped code
-exports.die = function(msg, exitCode = 1){
-  console.log(msg)
-  process.exit(exitCode)
-}
-
-exports.issueSummaryText = function(issue) {
-  return `#${issue.number} ${issue.title} [State: ${issue.state}]`
-}
-
-exports.issueFullText = function(issue) {
-  return `#${issue.number}: ${issue.title} [State: ${issue.state}]\n\nBody:\n${issue.body}\n`
-}
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-module.exports = require("path");
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports) {
-
-module.exports = require("fs");
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-const fs = __webpack_require__(20)
-const cacheFolder = __webpack_require__(5).homedir() + __webpack_require__(19).sep + ".noish";
-
-prepareRepoName = function(repoName) {
-  if (!fs.existsSync(cacheFolder)){
-    try {
-      fs.mkdirSync(cacheFolder)
-    } catch (e) {
-      console.log(`ERR: Could not create cache folder ${cacheFolder}! Stack:\n${e}`)
-      process.exit(1)
-    }
-  }
-  let safeRepoName = repoName.replace(/[\/\\]+/g, '_')
-  return `${cacheFolder}/${safeRepoName}.json`
-}
-
-// This should be the last call made if called, async is fine.
-exports.writeCacheForRepo = function(jsonData, repoName) {
-  const targetFile = prepareRepoName(repoName)
-  const writeableData = JSON.stringify(jsonData)
-  fs.writeFile(targetFile, writeableData, 'utf8', (err) =>{
-    if (err) {
-      console.log(`ERR: Something went wrong updating cache for ${repoName}!\n${err}`)
-    } else {
-      console.log(`Local cache for ${repoName} updated successfully!`)
-    }
-  });
-}
-
-// As the first call for several operations, sync is important here.
-// Returning an empty array if there's a problem to represent no data
-exports.readCacheForRepo = function(repoName) {
-  const targetFile = prepareRepoName(repoName)
-  if (fs.existsSync(targetFile)){
-    let issuesRaw = fs.readFileSync(targetFile, 'utf8')
-    return JSON.parse(issuesRaw)
-  } else {
-    return []
-  }
-}
-
-/***/ }),
-/* 22 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1622,13 +1546,13 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 23 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Cancel = __webpack_require__(3);
+var Cancel = __webpack_require__(4);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -1686,7 +1610,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 24 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1707,7 +1631,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 25 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1728,7 +1652,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 26 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1755,18 +1679,18 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 27 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(26);
-var isCancel = __webpack_require__(4);
+var transformData = __webpack_require__(21);
+var isCancel = __webpack_require__(5);
 var defaults = __webpack_require__(2);
-var isAbsoluteURL = __webpack_require__(25);
-var combineURLs = __webpack_require__(24);
+var isAbsoluteURL = __webpack_require__(20);
+var combineURLs = __webpack_require__(19);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -1848,7 +1772,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 28 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1907,19 +1831,19 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 29 */
+/* 24 */
 /***/ (function(module) {
 
 module.exports = {"_from":"axios@^0.18.0","_id":"axios@0.18.0","_inBundle":false,"_integrity":"sha1-MtU+SFHv3AoRmTts0AB4nXDAUQI=","_location":"/noish/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.18.0","name":"axios","escapedName":"axios","rawSpec":"^0.18.0","saveSpec":null,"fetchSpec":"^0.18.0"},"_requiredBy":["/noish"],"_resolved":"http://registry.npmjs.org/axios/-/axios-0.18.0.tgz","_shasum":"32d53e4851efdc0a11993b6cd000789d70c05102","_spec":"axios@^0.18.0","_where":"/home/jake/development/noish","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.3.0","is-buffer":"^1.1.5"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"bundlesize":"^0.5.7","coveralls":"^2.11.9","es6-promise":"^4.0.5","grunt":"^1.0.1","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.0.0","grunt-contrib-nodeunit":"^1.0.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^19.0.0","grunt-karma":"^2.0.0","grunt-ts":"^6.0.0-beta.3","grunt-webpack":"^1.0.18","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^1.3.0","karma-chrome-launcher":"^2.0.0","karma-coverage":"^1.0.0","karma-firefox-launcher":"^1.0.0","karma-jasmine":"^1.0.2","karma-jasmine-ajax":"^0.1.13","karma-opera-launcher":"^1.0.0","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^1.1.0","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^1.7.0","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","sinon":"^1.17.4","typescript":"^2.0.3","url-search-params":"^0.6.1","webpack":"^1.13.1","webpack-dev-server":"^1.14.1"},"homepage":"https://github.com/axios/axios","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test && bundlesize","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","version":"0.18.0"};
 
 /***/ }),
-/* 30 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = require("zlib");
 
 /***/ }),
-/* 31 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1934,13 +1858,13 @@ module.exports = (flag, argv) => {
 
 
 /***/ }),
-/* 32 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-const os = __webpack_require__(5);
-const hasFlag = __webpack_require__(31);
+const os = __webpack_require__(15);
+const hasFlag = __webpack_require__(26);
 
 const env = process.env;
 
@@ -2072,21 +1996,27 @@ module.exports = {
 
 
 /***/ }),
-/* 33 */
+/* 28 */
+/***/ (function(module, exports) {
+
+module.exports = require("util");
+
+/***/ }),
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = require("tty");
 
 /***/ }),
-/* 34 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * Module dependencies.
  */
 
-var tty = __webpack_require__(33);
-var util = __webpack_require__(6);
+var tty = __webpack_require__(29);
+var util = __webpack_require__(28);
 
 /**
  * This is the Node.js implementation of `debug()`.
@@ -2094,7 +2024,7 @@ var util = __webpack_require__(6);
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = __webpack_require__(7);
+exports = module.exports = __webpack_require__(6);
 exports.init = init;
 exports.log = log;
 exports.formatArgs = formatArgs;
@@ -2109,7 +2039,7 @@ exports.useColors = useColors;
 exports.colors = [ 6, 2, 3, 4, 5, 1 ];
 
 try {
-  var supportsColor = __webpack_require__(32);
+  var supportsColor = __webpack_require__(27);
   if (supportsColor && supportsColor.level >= 2) {
     exports.colors = [
       20, 21, 26, 27, 32, 33, 38, 39, 40, 41, 42, 43, 44, 45, 56, 57, 62, 63, 68,
@@ -2270,7 +2200,7 @@ exports.enable(load());
 
 
 /***/ }),
-/* 35 */
+/* 31 */
 /***/ (function(module, exports) {
 
 /**
@@ -2428,7 +2358,7 @@ function plural(ms, n, name) {
 
 
 /***/ }),
-/* 36 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2437,7 +2367,7 @@ function plural(ms, n, name) {
  * Expose `debug()` as the module.
  */
 
-exports = module.exports = __webpack_require__(7);
+exports = module.exports = __webpack_require__(6);
 exports.log = log;
 exports.formatArgs = formatArgs;
 exports.save = save;
@@ -2629,7 +2559,7 @@ function localstorage() {
 
 
 /***/ }),
-/* 37 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -2638,43 +2568,43 @@ function localstorage() {
  */
 
 if (typeof process === 'undefined' || process.type === 'renderer') {
-  module.exports = __webpack_require__(36);
+  module.exports = __webpack_require__(32);
 } else {
-  module.exports = __webpack_require__(34);
+  module.exports = __webpack_require__(30);
 }
 
 
 /***/ }),
-/* 38 */
+/* 34 */
 /***/ (function(module, exports) {
 
 module.exports = require("stream");
 
 /***/ }),
-/* 39 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = require("assert");
 
 /***/ }),
-/* 40 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(14);
-var buildURL = __webpack_require__(12);
-var http = __webpack_require__(11);
-var https = __webpack_require__(10);
-var httpFollow = __webpack_require__(9).http;
-var httpsFollow = __webpack_require__(9).https;
-var url = __webpack_require__(8);
-var zlib = __webpack_require__(30);
-var pkg = __webpack_require__(29);
+var settle = __webpack_require__(13);
+var buildURL = __webpack_require__(11);
+var http = __webpack_require__(10);
+var https = __webpack_require__(9);
+var httpFollow = __webpack_require__(8).http;
+var httpsFollow = __webpack_require__(8).https;
+var url = __webpack_require__(7);
+var zlib = __webpack_require__(25);
+var pkg = __webpack_require__(24);
 var createError = __webpack_require__(1);
-var enhanceError = __webpack_require__(13);
+var enhanceError = __webpack_require__(12);
 
 /*eslint consistent-return:0*/
 module.exports = function httpAdapter(config) {
@@ -2901,7 +2831,7 @@ module.exports = function httpAdapter(config) {
 
 
 /***/ }),
-/* 41 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2961,7 +2891,7 @@ module.exports = (
 
 
 /***/ }),
-/* 42 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3004,7 +2934,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 43 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3079,7 +3009,7 @@ module.exports = (
 
 
 /***/ }),
-/* 44 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3139,19 +3069,19 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 45 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(14);
-var buildURL = __webpack_require__(12);
-var parseHeaders = __webpack_require__(44);
-var isURLSameOrigin = __webpack_require__(43);
+var settle = __webpack_require__(13);
+var buildURL = __webpack_require__(11);
+var parseHeaders = __webpack_require__(40);
+var isURLSameOrigin = __webpack_require__(39);
 var createError = __webpack_require__(1);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(42);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(38);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -3248,7 +3178,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(41);
+      var cookies = __webpack_require__(37);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -3326,7 +3256,7 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 46 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3345,7 +3275,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 47 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3353,8 +3283,8 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 var defaults = __webpack_require__(2);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(28);
-var dispatchRequest = __webpack_require__(27);
+var InterceptorManager = __webpack_require__(23);
+var dispatchRequest = __webpack_require__(22);
 
 /**
  * Create a new instance of Axios
@@ -3431,7 +3361,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 48 */
+/* 44 */
 /***/ (function(module, exports) {
 
 /*!
@@ -3458,15 +3388,15 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 49 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(15);
-var Axios = __webpack_require__(47);
+var bind = __webpack_require__(14);
+var Axios = __webpack_require__(43);
 var defaults = __webpack_require__(2);
 
 /**
@@ -3500,15 +3430,15 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(3);
-axios.CancelToken = __webpack_require__(23);
-axios.isCancel = __webpack_require__(4);
+axios.Cancel = __webpack_require__(4);
+axios.CancelToken = __webpack_require__(18);
+axios.isCancel = __webpack_require__(5);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(22);
+axios.spread = __webpack_require__(17);
 
 module.exports = axios;
 
@@ -3517,16 +3447,16 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 50 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(49);
+module.exports = __webpack_require__(45);
 
 /***/ }),
-/* 51 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const axios = __webpack_require__(50)
+const axios = __webpack_require__(46)
 
 //Promise wrapper cleans up usage. per_page: https://developer.github.com/v3/#pagination
 exports.retrieve = function(repoName, uagent, maxCount) {
@@ -3549,7 +3479,123 @@ exports.retrieve = function(repoName, uagent, maxCount) {
 }
 
 /***/ }),
+/* 48 */
+/***/ (function(module, exports) {
+
+module.exports = require("child_process");
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const { execSync } = __webpack_require__(48)
+const { die } = __webpack_require__(3)
+
+// Grab local remote info using system git for use when a repo param isn't provided
+exports.getLocalRepoName = function() {
+  let remoteOutput = undefined
+  try {
+    remoteOutput = execSync(`git remote -v | head -n 1`).toString()
+    if (!remoteOutput.includes('github')){
+       throw new Error('Only public Github repos are currently supported')
+    }
+    let remoteUrl = remoteOutput.split(/\s+/)[1]
+    let repoName = remoteUrl.split(/[\/:]/).slice(-2).join('/').toLowerCase()
+    return repoName
+  } catch (err) {
+    die(`Error parsing git remote [${remoteOutput}], message: '${err.message}' - please file an issue at jakethedev/noish`)
+  }
+}
+
+// Output full issue information
+exports.printFullIssueById = function(issueId, issueCache){
+  const issueById = issueCache.find((item) => item.number == issueId)
+  if (issueById){
+    console.log(exports.issueFullText(issueById))
+  } else {
+    die(`Issue ${issueId} not found locally - might be the cache, or it might not exist`)
+  }
+}
+
+exports.username = function(){
+  return 'user'
+}
+
+exports.issueSummaryText = function(issue) {
+  let result = `#${issue.number} ${issue.title} `
+  if (issue.milestone){
+    result += `(milestone: '${issue.milestone.title}')`
+  }
+  return result
+}
+
+exports.issueFullText = function(issue) {
+  let baseResult = exports.issueSummaryText(issue)
+  baseResult += `\n\nDESC:\n${issue.body}\n`
+  return baseResult
+}
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports) {
+
+module.exports = require("path");
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
+/***/ }),
 /* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const fs = __webpack_require__(51)
+const { die } = __webpack_require__(3)
+const cacheFolder = __webpack_require__(15).homedir() + __webpack_require__(50).sep + ".noish"
+
+prepareRepoName = function(repoName) {
+  if (!fs.existsSync(cacheFolder)){
+    try {
+      fs.mkdirSync(cacheFolder)
+    } catch (e) {
+      die(`ERR: Could not create cache folder ${cacheFolder}! Stack:\n${e}`)
+    }
+  }
+  // Turn all slashes to underscores for happier saving
+  let safeRepoName = repoName.replace(/[\/\\]+/g, '_')
+  return `${cacheFolder}/${safeRepoName}.json`
+}
+
+// This should be the last call made if called, async is fine.
+exports.writeCacheForRepo = function(jsonData, repoName) {
+  const targetFile = prepareRepoName(repoName)
+  const writeableData = JSON.stringify(jsonData)
+  fs.writeFile(targetFile, writeableData, 'utf8', (err) =>{
+    if (err) {
+      console.log(`ERR: Something went wrong updating cache for ${repoName}!\n${err}`)
+    } else {
+      console.log(`Local cache for ${repoName} updated successfully!`)
+    }
+  });
+}
+
+// As the first call for several operations, sync is important here.
+// Returning an empty array if there's a problem to represent no data
+exports.readCacheForRepo = function(repoName) {
+  const targetFile = prepareRepoName(repoName)
+  if (fs.existsSync(targetFile)){
+    let issuesRaw = fs.readFileSync(targetFile, 'utf8')
+    return JSON.parse(issuesRaw)
+  } else {
+    return []
+  }
+}
+
+/***/ }),
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -3563,14 +3609,12 @@ it handles the magic from there
 */
 
 //Custom libs
-const httphelper = __webpack_require__(51)
-const filehelper = __webpack_require__(21)
-const { die, issueSummaryText, issueFullText } = __webpack_require__(18)
+const { die } = __webpack_require__(3)
+const filehelper = __webpack_require__(52)
+const gitHelper  = __webpack_require__(49)
+const httphelper = __webpack_require__(47)
 //Externals
-const minimist = __webpack_require__(17)
-//Stdlib
-const { execSync } = __webpack_require__(16)
-const { inspect } = __webpack_require__(6)
+const minimist = __webpack_require__(16)
 // For help command
 const helptext = `Welcome to Noish v${process.env.npm_package_version}
 
@@ -3598,22 +3642,6 @@ Bug reports and feature requests go here: https://github.com/jakethedev/noish
 Cheers :)
 `
 
-// Grab local remote info using system git when a reponame isn't provided
-function getLocalRepoName() {
-  let remoteOutput = undefined
-  try {
-    remoteOutput = execSync('git remote -v | head -n 1').toString()
-    if (!remoteOutput.includes('github')){
-       throw new Error('Only public Github repos are currently supported')
-    }
-    let remoteUrl = remoteOutput.split(/\s+/)[1]
-    let repoName = remoteUrl.split(/[\/:]/).slice(-2).join('/').toLowerCase()
-    return repoName
-  } catch (err) {
-    die(`Error parsing git remote [${remoteOutput}], message: '${err.message}' - please file an issue at jakethedev/noish`)
-  }
-}
-
 // Returns data from github
 async function updateLocalCache(repoName, issueCount) {
   if (repoName) {
@@ -3628,32 +3656,22 @@ async function updateLocalCache(repoName, issueCount) {
   }
 }
 
-// Output full issue information
-function printFullIssueById(issueId, issueCache){
-  const issueById = issueCache.find((item) => item.number == issueId)
-  if (issueById){
-    console.log(issueFullText(issueById))
-  } else {
-    die(`Issue ${issueId} not found locally - might be the cache, or it might not exist`)
-  }
-}
-
 // Search across titles and descriptions in the cache, case insensitive
-function printSearchResultsOnCacheForInput(issueCache, searchInput = 'Egg') {
+function printSearchResultsOnCacheForInput(issueCache, searchInput) {
   let titleMatchOutput = [], descMatchOutput = [], cleanInput = searchInput.trim().toLowerCase()
   // Single pass to catch em all
   for (issue of issueCache) {
     let lowerTitle = issue.title.toLowerCase(), lowerDesc = issue.body.toLowerCase()
     if (lowerTitle.includes(cleanInput)){
-      titleMatchOutput.push(issueSummaryText(issue))
+      titleMatchOutput.push(gitHelper.issueSummaryText(issue))
     }
     if (lowerDesc.includes(cleanInput)){
-      descMatchOutput.push(issueSummaryText(issue))
+      descMatchOutput.push(gitHelper.issueSummaryText(issue))
     }
   }
   // Print what we've got, if anything
   if (titleMatchOutput.length + descMatchOutput.length == 0) {
-    console.log(`We got nothin', no issues found for that search input`)
+    console.log(`We got nothin', no issues found matching your search`)
   } else {
     console.log(`Results for '${searchInput}', use noish -i ID for more info:\n`)
     if (titleMatchOutput.length) {
@@ -3669,9 +3687,9 @@ function printSearchResultsOnCacheForInput(issueCache, searchInput = 'Egg') {
   }
 }
 
-///////////////////
-//  Send it
-///////////////////
+////////////////////////////////////////////
+//  Send it - async'd to work with promises
+////////////////////////////////////////////
 async function main(){
   let args = minimist(process.argv.slice(2), {
     alias: {
@@ -3691,24 +3709,25 @@ async function main(){
     die(helptext)
   }
 
-  const repoName = args.repo ? args.repo : getLocalRepoName()
+  const repoName = args.repo ? args.repo : gitHelper.getLocalRepoName()
   if (args.update) {
-    // Smash and grab and cache
+    // Smash and grab, sort and cache
     let issueCount = args.issueCount ? args.issueCount : 50 // Sane default issue number
     let issueData = await updateLocalCache(repoName, issueCount)
+    let sortedIssues = issueData.sort((a,b) => a.number >= b.number)
     console.log(`We found ${issueData.length} item(s) on github! Caching now...`)
     filehelper.writeCacheForRepo(issueData, repoName)
   } else {
     // Everything else relies on the issue cache, this else cleans things up
-    const issueCache = filehelper.readCacheForRepo(repoName).sort((a,b) => a.number >= b.number)
+    const issueCache = filehelper.readCacheForRepo(repoName)
     if (issueCache.length < 1) {
       die(`No local issues found for ${repoName}, make sure the repo is a public Github repo then try 'noish -u'`)
     }
     if (args.id) {
-      printFullIssueById(args.id, issueCache)
+      gitHelper.printFullIssueById(args.id, issueCache)
     } else if (args.list) {
       for (issue of issueCache){
-        console.log(issueSummaryText(issue))
+        console.log(gitHelper.issueSummaryText(issue))
       }
     } else if (args.search && args.search.length > 0) {
       printSearchResultsOnCacheForInput(issueCache, args.search)
