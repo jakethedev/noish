@@ -9,14 +9,12 @@ it handles the magic from there
 */
 
 //Custom libs
-const httphelper = require('./http-helper')
+const { die } = require('./util')
 const filehelper = require('./file-helper')
-const { die, issueSummaryText, issueFullText } = require('./util')
+const gitHelper  = require('./git-helper')
+const httphelper = require('./http-helper')
 //Externals
 const minimist = require('minimist')
-//Stdlib
-const { execSync } = require('child_process')
-const { inspect } = require('util')
 // For help command
 const helptext = `Welcome to Noish v${process.env.npm_package_version}
 
@@ -44,22 +42,6 @@ Bug reports and feature requests go here: https://github.com/jakethedev/noish
 Cheers :)
 `
 
-// Grab local remote info using system git when a reponame isn't provided
-function getLocalRepoName() {
-  let remoteOutput = undefined
-  try {
-    remoteOutput = execSync('git remote -v | head -n 1').toString()
-    if (!remoteOutput.includes('github')){
-       throw new Error('Only public Github repos are currently supported')
-    }
-    let remoteUrl = remoteOutput.split(/\s+/)[1]
-    let repoName = remoteUrl.split(/[\/:]/).slice(-2).join('/').toLowerCase()
-    return repoName
-  } catch (err) {
-    die(`Error parsing git remote [${remoteOutput}], message: '${err.message}' - please file an issue at jakethedev/noish`)
-  }
-}
-
 // Returns data from github
 async function updateLocalCache(repoName, issueCount) {
   if (repoName) {
@@ -74,32 +56,22 @@ async function updateLocalCache(repoName, issueCount) {
   }
 }
 
-// Output full issue information
-function printFullIssueById(issueId, issueCache){
-  const issueById = issueCache.find((item) => item.number == issueId)
-  if (issueById){
-    console.log(issueFullText(issueById))
-  } else {
-    die(`Issue ${issueId} not found locally - might be the cache, or it might not exist`)
-  }
-}
-
 // Search across titles and descriptions in the cache, case insensitive
-function printSearchResultsOnCacheForInput(issueCache, searchInput = 'Egg') {
+function printSearchResultsOnCacheForInput(issueCache, searchInput) {
   let titleMatchOutput = [], descMatchOutput = [], cleanInput = searchInput.trim().toLowerCase()
   // Single pass to catch em all
   for (issue of issueCache) {
     let lowerTitle = issue.title.toLowerCase(), lowerDesc = issue.body.toLowerCase()
     if (lowerTitle.includes(cleanInput)){
-      titleMatchOutput.push(issueSummaryText(issue))
+      titleMatchOutput.push(gitHelper.issueSummaryText(issue))
     }
     if (lowerDesc.includes(cleanInput)){
-      descMatchOutput.push(issueSummaryText(issue))
+      descMatchOutput.push(gitHelper.issueSummaryText(issue))
     }
   }
   // Print what we've got, if anything
   if (titleMatchOutput.length + descMatchOutput.length == 0) {
-    console.log(`We got nothin', no issues found for that search input`)
+    console.log(`We got nothin', no issues found matching your search`)
   } else {
     console.log(`Results for '${searchInput}', use noish -i ID for more info:\n`)
     if (titleMatchOutput.length) {
@@ -115,9 +87,9 @@ function printSearchResultsOnCacheForInput(issueCache, searchInput = 'Egg') {
   }
 }
 
-///////////////////
-//  Send it
-///////////////////
+////////////////////////////////////////////
+//  Send it - async'd to work with promises
+////////////////////////////////////////////
 async function main(){
   let args = minimist(process.argv.slice(2), {
     alias: {
@@ -137,24 +109,25 @@ async function main(){
     die(helptext)
   }
 
-  const repoName = args.repo ? args.repo : getLocalRepoName()
+  const repoName = args.repo ? args.repo : gitHelper.getLocalRepoName()
   if (args.update) {
-    // Smash and grab and cache
+    // Smash and grab, sort and cache
     let issueCount = args.issueCount ? args.issueCount : 50 // Sane default issue number
     let issueData = await updateLocalCache(repoName, issueCount)
+    let sortedIssues = issueData.sort((a,b) => a.number >= b.number)
     console.log(`We found ${issueData.length} item(s) on github! Caching now...`)
     filehelper.writeCacheForRepo(issueData, repoName)
   } else {
     // Everything else relies on the issue cache, this else cleans things up
-    const issueCache = filehelper.readCacheForRepo(repoName).sort((a,b) => a.number >= b.number)
+    const issueCache = filehelper.readCacheForRepo(repoName)
     if (issueCache.length < 1) {
       die(`No local issues found for ${repoName}, make sure the repo is a public Github repo then try 'noish -u'`)
     }
     if (args.id) {
-      printFullIssueById(args.id, issueCache)
+      gitHelper.printFullIssueById(args.id, issueCache)
     } else if (args.list) {
       for (issue of issueCache){
-        console.log(issueSummaryText(issue))
+        console.log(gitHelper.issueSummaryText(issue))
       }
     } else if (args.search && args.search.length > 0) {
       printSearchResultsOnCacheForInput(issueCache, args.search)

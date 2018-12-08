@@ -1,15 +1,16 @@
 const fs = require('fs')
-const cacheFolder = require('os').homedir() + require('path').sep + ".noish";
+const { die } = require('./util')
+const cacheFolder = require('os').homedir() + require('path').sep + ".noish"
 
 prepareRepoName = function(repoName) {
   if (!fs.existsSync(cacheFolder)){
     try {
       fs.mkdirSync(cacheFolder)
     } catch (e) {
-      console.log(`ERR: Could not create cache folder ${cacheFolder}! Stack:\n${e}`)
-      process.exit(1)
+      die(`ERR: Could not create cache folder ${cacheFolder}! Stack:\n${e}`)
     }
   }
+  // Turn all slashes to underscores for happier saving
   let safeRepoName = repoName.replace(/[\/\\]+/g, '_')
   return `${cacheFolder}/${safeRepoName}.json`
 }

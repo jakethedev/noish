@@ -6,6 +6,6 @@ module.exports = {
   mode: 'production',
   output: {
     path: path.join(__dirname, 'bin'),
-    filename: 'noish.js'
+    filename: 'noish'
   }
 }
