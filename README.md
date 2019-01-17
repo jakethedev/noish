@@ -1,6 +1,6 @@
 # Noish: The Github Issue Viewer
 
-Sometimes you just need to know which issue number you're closing, or what needs to be done today, and that's why I build this. Noish can query public github repos for issues, then store the response locally so you can look through it offline. Currently only tested on Debian, but this should work on any system with Git and Node 8+ installed.
+Let's cut out the noise and just see what needs done today. Noish is here to help! I built it to hit public github repos for issues and store them locally, so you can list them out or search through them by title or description. Currently only tested on Ubuntu, but this should work on any system with Node 8+ installed
 
 ## Usage
 
@@ -14,7 +14,7 @@ Below is a list of commands Noish recognizes. Each is in shorthand but can be sp
 - -f $filepath: Force read or write from $filepath instead of ~/.noish/$repo.json
 - -i $id: Print detailed information about an issue with issue number $id for $repo
 - -l: List id, title, and status of $repo's cached issues
-- -r $override: Set $repo to a $override, must be in the form of 'username/reponame'
+- -r $override: Set $repo to $override, must be in the form of 'username/reponame'
 - -s: Caseless search of local $repo cache by issue title and description
 - -u: Updates cache for $repo. Currently there is no merge, it rewrites the local cache. Defaults to 50 most recent open issues
 
