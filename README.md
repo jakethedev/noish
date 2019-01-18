@@ -1,6 +1,6 @@
 # Noish: The Github Issue Viewer
 
-Let's cut out the noise and just see what needs done today. Noish is here to help! I built it to hit public github repos for issues and store them locally, so you can list them out or search through them by title or description. Currently only tested on Ubuntu, but this should work on any system with Node 8+ installed
+Let's cut out the noise and just see what needs done today. Noish is here to help! I built it to hit public github repos for issues and store them locally, so you can list them out or search through them by title or description. Currently only tested on Ubuntu, but this should work on any system with Node 8+ and Git on your path
 
 ## Usage
 
