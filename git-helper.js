@@ -3,18 +3,19 @@ const { die } = require('./util')
 
 // Grab local remote info using system git for use when a repo param isn't provided
 exports.getLocalRepoName = function() {
-  let remoteOutput = undefined
+  let rawRemoteOutput;
   try {
-    remoteOutput = execSync(`git remote -v | head -n 1`).toString()
-    if (!remoteOutput.includes('github')){
-       throw new Error('Only public Github repos are currently supported')
+    rawRemoteOutput = execSync(`git remote -v 2>/dev/null`).toString()
+    if (!rawRemoteOutput.includes('github')){
+      throw new Error()
     }
-    let remoteUrl = remoteOutput.split(/\s+/)[1]
-    let repoName = remoteUrl.split(/[\/:]/).slice(-2).join('/').toLowerCase()
-    return repoName
   } catch (err) {
-    die(`Error parsing git remote [${remoteOutput}], message: '${err.message}' - please file an issue at jakethedev/noish`)
+    die('ERR: Only public Github repos (and *nix environments) are currently supported. Did you mean to use "-r user/repo"?')
   }
+  //This is a bit wild, but works well enough, and might just work on windows too?
+  let remoteUrl = rawRemoteOutput.split(/\s+/)[1]
+  let repoName = remoteUrl.split(/[\/:]/).slice(-2).join('/').toLowerCase()
+  return repoName
 }
 
 // Output full issue information

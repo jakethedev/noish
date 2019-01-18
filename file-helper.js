@@ -3,11 +3,15 @@ const { die } = require('./util')
 const cacheFolder = require('os').homedir() + require('path').sep + ".noish"
 
 prepareRepoName = function(repoName) {
+  if (!repoName || repoName === true) {
+    // The 'true' case is due to minimist, this catches cases of "noish -r" with no repo provided
+    die(`ERR: No repo was provided, please use '-r user/repo' or cd into a local Github project`)
+  }
   if (!fs.existsSync(cacheFolder)){
     try {
       fs.mkdirSync(cacheFolder)
     } catch (e) {
-      die(`ERR: Could not create cache folder ${cacheFolder}! Stack:\n${e}`)
+      die(`ERR: Could not create cache folder ${cacheFolder}! Check permissions on it maybe?\n\nStacktrace:\n${e}`)
     }
   }
   // Turn all slashes to underscores for happier saving

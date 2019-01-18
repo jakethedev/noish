@@ -3493,18 +3493,19 @@ const { die } = __webpack_require__(3)
 
 // Grab local remote info using system git for use when a repo param isn't provided
 exports.getLocalRepoName = function() {
-  let remoteOutput = undefined
+  let rawRemoteOutput;
   try {
-    remoteOutput = execSync(`git remote -v | head -n 1`).toString()
-    if (!remoteOutput.includes('github')){
-       throw new Error('Only public Github repos are currently supported')
+    rawRemoteOutput = execSync(`git remote -v 2>/dev/null`).toString()
+    if (!rawRemoteOutput.includes('github')){
+      throw new Error()
     }
-    let remoteUrl = remoteOutput.split(/\s+/)[1]
-    let repoName = remoteUrl.split(/[\/:]/).slice(-2).join('/').toLowerCase()
-    return repoName
   } catch (err) {
-    die(`Error parsing git remote [${remoteOutput}], message: '${err.message}' - please file an issue at jakethedev/noish`)
+    die('Err: Only public Github repos (and *nix environments) are currently supported. Did you mean to use "-r user/repo"?')
   }
+  //This is a bit wild, but works well enough, and might just work on windows too?
+  let remoteUrl = rawRemoteOutput.split(/\s+/)[1]
+  let repoName = remoteUrl.split(/[\/:]/).slice(-2).join('/').toLowerCase()
+  return repoName
 }
 
 // Output full issue information
@@ -3557,11 +3558,15 @@ const { die } = __webpack_require__(3)
 const cacheFolder = __webpack_require__(15).homedir() + __webpack_require__(50).sep + ".noish"
 
 prepareRepoName = function(repoName) {
+  if (!repoName || repoName === true) {
+    // The 'true' case is due to minimist, this catches cases of "noish -r" with no repo provided
+    die(`ERR: No repo was provided, please use '-r user/repo' or cd into a local Github project`)
+  }
   if (!fs.existsSync(cacheFolder)){
     try {
       fs.mkdirSync(cacheFolder)
     } catch (e) {
-      die(`ERR: Could not create cache folder ${cacheFolder}! Stack:\n${e}`)
+      die(`ERR: Could not create cache folder ${cacheFolder}! Check permissions on it maybe?\n\nStacktrace:\n${e}`)
     }
   }
   // Turn all slashes to underscores for happier saving
