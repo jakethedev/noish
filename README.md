@@ -1,6 +1,6 @@
 # Noish: The Github Issue Viewer
 
-I built Noish to hit public github repos for issues and store them locally, so you could list them out or search through them by title or description. But, the times have changed, and Github came out with [Hub](https://github.com/github/hub) - a fantastic, fully idealized version of this tool that totally supercedes this. Go use that one, this repo is now just another deprecated project :)
+NOTICE: I built Noish to hit public github repos for issues and store them locally, so you could list them out or search through them by title or description. But, the times have changed, and Github came out with [Hub](https://github.com/github/hub) - a fantastic, fully idealized version of this tool that totally supercedes this. Go use that one, this repo is now just another deprecated project :)
 
 Remainder of the README is what it was before deprecation.
 
